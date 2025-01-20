@@ -5,7 +5,6 @@
 #include "NeoPixel.h"
 #include "PacketSerial.h"
 #include "ProtoBuff.h"
-#include "STM32SAM.h"
 #include "gfx.h"
 
 #if defined(STM32F103xB)
