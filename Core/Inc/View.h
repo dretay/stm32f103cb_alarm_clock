@@ -1,6 +1,5 @@
 #pragma once
 
-
 #if defined(STM32F103xB)
 #include "stm32f1xx_hal.h"
 #else
@@ -9,7 +8,6 @@
 
 #include "gfx.h"
 
-
 typedef struct {
-	void(*render)(void);
+  void (*render)(void);
 } View;
