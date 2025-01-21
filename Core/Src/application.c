@@ -8,7 +8,9 @@ extern SPI_HandleTypeDef hspi1;
 extern I2C_HandleTypeDef hi2c2;
 
 static View* clock_view;
-
+static View* bank_view;
+static View* weather_view;
+static View* current_view;
 // void speak_parser(pb_istream_t* stream, const pb_field_t* type)
 //{
 //     Speak speak;
@@ -33,6 +35,15 @@ static View* clock_view;
 //		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12,SET);
 //	}
 // }
+static void cycle_view() {
+  if (current_view == clock_view) {
+    current_view = bank_view;
+  } else if (current_view == bank_view) {
+    current_view = weather_view;
+  } else if (current_view == weather_view) {
+    current_view = clock_view;
+  }
+}
 static void init() {
   // put this somewhere else, just need the clock to start high
   uint8_t TX_Data[2] = {0};
@@ -48,6 +59,9 @@ static void init() {
   gfxInit();
   gdispGSetOrientation(gdispGetDisplay(0), GDISP_ROTATE_270);
   clock_view = ClockView.init();
+  bank_view = BankView.init();
+  weather_view = WeatherView.init();
+  current_view = weather_view;
   DFPlayerMini.init();
 
   //	ProtoBuff.add_handler(Speak_fields, &speak_parser);
@@ -64,7 +78,7 @@ static void init() {
 
   //	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim3);
-  Timer.every(1000, clock_view->render);
+  Timer.every(10000, cycle_view);
 }
 static bool QUERY_ENCODER = false;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
@@ -92,7 +106,7 @@ static void run(void) {
     QUERY_ENCODER = false;
     query_encoder();
   }
-  //	clock_view->render();
+  current_view->render();
   //	uint8_t TX_Data[2] = {0x05, 0xE2};//"he";
   //	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15,SET);
   //	HAL_Delay(100);

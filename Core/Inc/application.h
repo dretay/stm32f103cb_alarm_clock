@@ -1,10 +1,12 @@
 #pragma once
 
+#include "BankView.h"
 #include "ClockView.h"
 #include "DFPlayerMini.h"
 #include "NeoPixel.h"
 #include "PacketSerial.h"
 #include "ProtoBuff.h"
+#include "WeatherView.h"
 #include "gfx.h"
 
 #if defined(STM32F103xB)
